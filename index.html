@@ -11,11 +11,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
     html { scroll-behavior: smooth; }
     :root {
       --black: #000000;
       --white: #FFFFFF;
+      --azul:  #001AFF;
       --display: 'Bebas Neue', sans-serif;
       --sans:    'Space Grotesk', sans-serif;
       --pad:     48px;
@@ -42,6 +43,7 @@
       letter-spacing: .18em;
       text-transform: uppercase;
     }
+    /* CTAs — borde duro, sin redondeo */
     .arrow-link {
       display: inline-block;
       text-decoration: none;
@@ -50,19 +52,25 @@
       font-size: 11px;
       letter-spacing: .16em;
       text-transform: uppercase;
-      padding-bottom: 4px;
-      border-bottom: 1px solid currentColor;
-      transition: opacity .25s;
+      padding: 10px 24px;
+      border: 1px solid currentColor;
+      transition: background .2s, color .2s, border-color .2s;
     }
-    .arrow-link:hover { opacity: .5; }
+    .arrow-link:hover {
+      background: var(--azul);
+      color: var(--white) !important;
+      border-color: var(--azul);
+    }
     .arrow-link--white { color: var(--white); }
     .arrow-link--black { color: var(--black); }
+    /* Tipografía display — agresiva */
     .logo-text {
       font-family: var(--display);
       font-size: 26px;
-      letter-spacing: .06em;
+      letter-spacing: -0.02em;
       line-height: 1;
       text-decoration: none;
+      -webkit-font-smoothing: none;
     }
     .logo-text--white { color: var(--white); }
     .logo-text--black { color: var(--black); }
@@ -75,7 +83,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 18px var(--pad);
-      border-bottom: 1px solid rgba(255,255,255,.1);
+      border-bottom: 1px solid var(--azul);
     }
     #hero-logo { display: block; width: 100%; max-width: 700px; height: auto; margin-bottom: 48px; }
     .nav-cta {
@@ -90,6 +98,7 @@
       transition: opacity .25s;
     }
     .nav-cta:hover { opacity: 1; }
+    /* Hero — pantalla completa, contenido centrado */
     .hero {
       background: var(--black);
       min-height: 100vh;
@@ -98,23 +107,31 @@
       flex-direction: column;
       justify-content: center;
     }
-    .hero-eyebrow { color: var(--white); opacity: .5; margin-bottom: 16px; }
+    /* Eyebrow hero en azul eléctrico */
+    .hero-eyebrow { color: var(--azul); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 16px; }
+    /* Eslogan — asimetría: empuja hacia la derecha */
     .hero-sub {
       font-family: var(--sans);
       font-weight: 300;
       font-size: 1.4rem;
       line-height: 1.6;
       color: var(--white);
-      max-width: 540px;
+      max-width: 480px;
       margin-bottom: 44px;
+      margin-left: auto;
+      text-align: right;
+      padding-left: 4vw;
     }
-    .section { padding: 120px var(--pad); }
+    .hero .arrow-link { align-self: flex-end; }
+    /* Separadores de sección en azul eléctrico */
+    .section { padding: 120px var(--pad); border-top: 1px solid var(--azul); }
     .problema { background: var(--white); }
     .problema-headline {
       font-family: var(--display);
       font-size: clamp(56px, 9vw, 120px);
       line-height: .95;
-      letter-spacing: .02em;
+      letter-spacing: -0.02em;
+      -webkit-font-smoothing: none;
       color: var(--black);
       margin-bottom: 96px;
       max-width: 860px;
@@ -124,7 +141,7 @@
     .problema-item:nth-child(even) { border-left: 1px solid var(--black); padding-left: 44px; padding-right: 0; }
     .problema-item-title { font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; }
     .problema-item-body { font-family: var(--sans); font-weight: 300; font-size: 14px; line-height: 1.9; letter-spacing: .01em; }
-    .proceso { background: var(--white); border-top: 1px solid var(--black); }
+    .proceso { background: var(--white); }
     .proceso-eyebrow { margin-bottom: 72px; }
     .proceso-list { display: flex; flex-direction: column; }
     .proceso-step {
@@ -141,31 +158,33 @@
       font-family: var(--display);
       font-size: clamp(180px, 24vw, 280px);
       line-height: 1; color: var(--black); opacity: .04;
-      letter-spacing: .02em; pointer-events: none; user-select: none;
+      letter-spacing: -0.02em; pointer-events: none; user-select: none;
     }
     .step-left { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
     .step-index { font-family: var(--sans); font-weight: 300; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; opacity: .38; }
-    .step-title { font-family: var(--display); font-size: clamp(40px, 4.5vw, 64px); line-height: .95; letter-spacing: .02em; }
+    .step-title { font-family: var(--display); font-size: clamp(40px, 4.5vw, 64px); line-height: .95; letter-spacing: -0.02em; -webkit-font-smoothing: none; }
     .step-right { position: relative; z-index: 1; padding-left: 48px; display: flex; align-items: center; }
     .step-body { font-family: var(--sans); font-weight: 300; font-size: 14px; line-height: 1.9; letter-spacing: .01em; max-width: 480px; }
+    /* Planes — solo borde izquierdo azul, sin cajas */
     .planes { background: var(--black); }
     .planes-eyebrow { color: var(--white); opacity: .38; margin-bottom: 80px; }
-    .planes-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,.16); }
-    .plan { padding: 56px 0; }
-    .plan + .plan { border-left: 1px solid rgba(255,255,255,.16); padding-left: 40px; }
+    .planes-grid { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 48px; }
+    .plan { padding: 56px 0 56px 32px; border-left: 4px solid var(--azul); }
     .plan-badge { font-family: var(--sans); font-weight: 300; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--white); opacity: .35; margin-bottom: 20px; }
-    .plan-name { font-family: var(--display); font-size: clamp(72px, 8vw, 110px); color: var(--white); line-height: .9; letter-spacing: .02em; margin-bottom: 16px; }
-    .plan-price { font-family: var(--sans); font-weight: 300; font-size: 13px; letter-spacing: .04em; color: var(--white); opacity: .5; margin-bottom: 44px; }
+    /* Nombre del plan en azul */
+    .plan-name { font-family: var(--display); font-size: 64px; color: var(--azul); line-height: .9; letter-spacing: -0.02em; -webkit-font-smoothing: none; margin-bottom: 16px; }
+    /* Precio sin opacidad, tracking amplio */
+    .plan-price { font-family: var(--sans); font-weight: 300; font-size: 13px; letter-spacing: 0.15em; color: var(--white); margin-bottom: 44px; }
     .plan-features { list-style: none; margin-bottom: 52px; }
     .plan-features li { font-family: var(--sans); font-weight: 300; font-size: 13px; line-height: 1; color: var(--white); opacity: .58; letter-spacing: .01em; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.09); }
     .plan-features li:first-child { border-top: 1px solid rgba(255,255,255,.09); }
-    .cta-section { background: var(--black); border-top: 1px solid rgba(255,255,255,.1); padding: 160px var(--pad); }
-    .cta-headline { font-family: var(--display); font-size: clamp(64px, 11vw, 160px); line-height: .9; letter-spacing: .02em; color: var(--white); text-align: center; margin-bottom: 100px; }
+    .cta-section { background: var(--black); border-top: 1px solid var(--azul); padding: 160px var(--pad); }
+    .cta-headline { font-family: var(--display); font-size: clamp(64px, 11vw, 160px); line-height: .9; letter-spacing: -0.02em; -webkit-font-smoothing: none; color: var(--white); text-align: center; margin-bottom: 100px; }
     .cta-conditions { max-width: 560px; margin: 0 auto 80px; border-top: 1px solid rgba(255,255,255,.16); }
     .cta-condition { font-family: var(--sans); font-weight: 300; font-size: 13px; line-height: 1; letter-spacing: .02em; color: var(--white); opacity: .6; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
     .cta-condition::before { content: "\2014\00a0\00a0"; opacity: .35; }
     .cta-btn { display: flex; justify-content: center; }
-    footer { background: var(--black); border-top: 1px solid rgba(255,255,255,.1); padding: 32px var(--pad); display: flex; align-items: center; justify-content: space-between; }
+    footer { background: var(--black); border-top: 1px solid var(--azul); padding: 32px var(--pad); display: flex; align-items: center; justify-content: space-between; }
     .footer-info { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
     .footer-info a { font-family: var(--sans); font-weight: 300; font-size: 11px; letter-spacing: .08em; color: var(--white); text-decoration: none; opacity: .38; transition: opacity .25s; }
     .footer-info a:hover { opacity: .9; }
@@ -179,8 +198,10 @@
       .proceso-step { grid-template-columns: 1fr; gap: 18px; padding: 48px 0; }
       .step-right { padding-left: 0; }
       .step-ghost { display: none; }
-      .planes-grid { grid-template-columns: 1fr; }
-      .plan + .plan { border-left: none; border-top: 1px solid rgba(255,255,255,.16); padding-left: 0; }
+      .planes-grid { grid-template-columns: 1fr; row-gap: 40px; column-gap: 0; }
+      .plan { padding-left: 24px; }
+      .hero-sub { margin-left: 0; text-align: left; padding-left: 0; }
+      .hero .arrow-link { align-self: flex-start; }
     }
   </style>
 </head>
@@ -571,11 +592,13 @@ void main(){
   img.onerror = function () {
     document.fonts.ready.then(function () {
       const fc = document.createElement('canvas');
-      fc.width = 1400; fc.height = 350;
+      const fontSize = Math.max(120, Math.min(Math.round(window.innerWidth * 0.20), 280));
+      fc.width = Math.max(1000, fontSize * 5);
+      fc.height = Math.round(fontSize * 1.4);
       const fctx = fc.getContext('2d');
       fctx.clearRect(0, 0, fc.width, fc.height);
       fctx.fillStyle = '#808080';
-      fctx.font = '300px "Bebas Neue", sans-serif';
+      fctx.font = `${fontSize}px "Bebas Neue", sans-serif`;
       fctx.textAlign = 'center';
       fctx.textBaseline = 'middle';
       fctx.fillText('NODO', fc.width / 2, fc.height / 2);
