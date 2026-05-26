@@ -98,15 +98,15 @@
       transition: opacity .25s;
     }
     .nav-cta:hover { opacity: 1; }
-    /* Hero — grid dos columnas */
+    /* Hero — grid dos columnas, contenido centrado verticalmente */
     .hero {
       background: var(--black);
       min-height: 100vh;
-      padding: 0 var(--pad);
+      padding: 80px var(--pad) 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 64px;
-      align-items: center;
+      align-content: center;
     }
     .hero-left {
       display: flex;
@@ -128,15 +128,51 @@
     }
     /* Eyebrow hero en azul eléctrico */
     .hero-eyebrow { color: var(--azul); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 24px; }
+    /* Bloque INTENCIÓN / CONDUCTA */
+    .hero-dicotomia {
+      margin-bottom: 40px;
+      border-right: 4px solid var(--azul);
+      padding-right: 20px;
+    }
+    .hero-dic-item {
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .hero-dic-item:first-child { border-top: 1px solid rgba(255,255,255,.08); }
+    .hero-dic-marker {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+    }
+    .hero-dic-word {
+      font-family: var(--display);
+      font-size: clamp(36px, 4vw, 60px);
+      letter-spacing: -0.02em;
+      -webkit-font-smoothing: none;
+      line-height: 1;
+    }
+    .hero-dic-word.off {
+      color: rgba(255,255,255,.18);
+      text-decoration: line-through;
+      text-decoration-color: rgba(255,255,255,.25);
+    }
+    .hero-dic-word.on { color: var(--azul); }
     /* Eslogan columna derecha */
     .hero-sub {
       font-family: var(--sans);
       font-weight: 300;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       line-height: 1.6;
-      color: var(--white);
-      max-width: 480px;
-      margin-bottom: 44px;
+      color: rgba(255,255,255,.7);
+      max-width: 360px;
+      margin-bottom: 40px;
     }
     /* Separadores de sección en azul eléctrico */
     .section { padding: 120px var(--pad); border-top: 1px solid var(--azul); }
@@ -215,8 +251,10 @@
       .step-ghost { display: none; }
       .planes-grid { grid-template-columns: 1fr; row-gap: 40px; column-gap: 0; }
       .plan { padding-left: 24px; }
-      .hero { grid-template-columns: 1fr; row-gap: 40px; padding-top: 80px; }
+      .hero { grid-template-columns: 1fr; row-gap: 48px; }
       .hero-right { align-items: flex-start; text-align: left; }
+      .hero-dicotomia { border-right: none; border-left: 4px solid var(--azul); padding-right: 0; padding-left: 16px; }
+      .hero-dic-item { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -230,13 +268,14 @@
 <section class="hero" id="inicio">
   <div class="hero-left">
     <p class="eyebrow hero-eyebrow" data-fade data-delay="0">[*Ingeniería Conductual*]</p>
+    <!-- NODO.svg no encontrado en el repo — SVG inline con text + Bebas Neue -->
     <svg id="hero-logo"
          xmlns="http://www.w3.org/2000/svg"
          viewBox="0 0 500 115"
          data-fade data-delay="1"
          role="img" aria-label="NODO">
       <defs>
-        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id="nodo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stop-color="#ffffff"/>
           <stop offset="100%" stop-color="#001AFF"/>
         </linearGradient>
@@ -246,14 +285,24 @@
             font-size="108"
             textLength="500"
             lengthAdjust="spacingAndGlyphs"
-            fill="url(#logo-grad)">NODO</text>
+            fill="url(#nodo-grad)">NODO</text>
     </svg>
   </div>
   <div class="hero-right">
-    <p class="hero-sub" data-fade data-delay="2">
+    <div class="hero-dicotomia" data-fade data-delay="2">
+      <div class="hero-dic-item">
+        <span class="hero-dic-marker">no</span>
+        <span class="hero-dic-word off">INTENCIÓN</span>
+      </div>
+      <div class="hero-dic-item">
+        <span class="hero-dic-marker">sí</span>
+        <span class="hero-dic-word on">CONDUCTA</span>
+      </div>
+    </div>
+    <p class="hero-sub" data-fade data-delay="3">
       La intención no cambia nada.<br>La conducta, sí.
     </p>
-    <a href="https://tally.so" class="arrow-link arrow-link--white" data-fade data-delay="3" target="_blank" rel="noopener">
+    <a href="https://tally.so" class="arrow-link arrow-link--white" data-fade data-delay="4" target="_blank" rel="noopener">
       Solicitar diagnóstico →
     </a>
   </div>
