@@ -98,18 +98,37 @@
       transition: opacity .25s;
     }
     .nav-cta:hover { opacity: 1; }
-    /* Hero — pantalla completa, contenido centrado */
+    /* Hero — grid dos columnas */
     .hero {
       background: var(--black);
       min-height: 100vh;
       padding: 0 var(--pad);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 64px;
+      align-items: center;
+    }
+    .hero-left {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      align-items: flex-start;
+    }
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+    #hero-logo {
+      display: block;
+      width: 100%;
+      max-width: 700px;
+      height: auto;
+      overflow: visible;
     }
     /* Eyebrow hero en azul eléctrico */
-    .hero-eyebrow { color: var(--azul); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 16px; }
-    /* Eslogan — asimetría: empuja hacia la derecha */
+    .hero-eyebrow { color: var(--azul); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 24px; }
+    /* Eslogan columna derecha */
     .hero-sub {
       font-family: var(--sans);
       font-weight: 300;
@@ -118,11 +137,7 @@
       color: var(--white);
       max-width: 480px;
       margin-bottom: 44px;
-      margin-left: auto;
-      text-align: right;
-      padding-left: 4vw;
     }
-    .hero .arrow-link { align-self: flex-end; }
     /* Separadores de sección en azul eléctrico */
     .section { padding: 120px var(--pad); border-top: 1px solid var(--azul); }
     .problema { background: var(--white); }
@@ -200,8 +215,8 @@
       .step-ghost { display: none; }
       .planes-grid { grid-template-columns: 1fr; row-gap: 40px; column-gap: 0; }
       .plan { padding-left: 24px; }
-      .hero-sub { margin-left: 0; text-align: left; padding-left: 0; }
-      .hero .arrow-link { align-self: flex-start; }
+      .hero { grid-template-columns: 1fr; row-gap: 40px; padding-top: 80px; }
+      .hero-right { align-items: flex-start; text-align: left; }
     }
   </style>
 </head>
@@ -213,14 +228,35 @@
 </nav>
 
 <section class="hero" id="inicio">
-  <p class="eyebrow hero-eyebrow" data-fade data-delay="0">["Ingeniería Conductual"]</p>
-  <canvas id="hero-logo" data-fade data-delay="1"></canvas>
-  <p class="hero-sub" data-fade data-delay="2">
-    La intención no cambia nada.<br>La conducta, sí.
-  </p>
-  <a href="https://tally.so" class="arrow-link arrow-link--white" data-fade data-delay="3" target="_blank" rel="noopener">
-    Solicitar diagnóstico →
-  </a>
+  <div class="hero-left">
+    <p class="eyebrow hero-eyebrow" data-fade data-delay="0">[*Ingeniería Conductual*]</p>
+    <svg id="hero-logo"
+         xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 500 115"
+         data-fade data-delay="1"
+         role="img" aria-label="NODO">
+      <defs>
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#001AFF"/>
+        </linearGradient>
+      </defs>
+      <text x="0" y="105"
+            font-family="'Bebas Neue', sans-serif"
+            font-size="108"
+            textLength="500"
+            lengthAdjust="spacingAndGlyphs"
+            fill="url(#logo-grad)">NODO</text>
+    </svg>
+  </div>
+  <div class="hero-right">
+    <p class="hero-sub" data-fade data-delay="2">
+      La intención no cambia nada.<br>La conducta, sí.
+    </p>
+    <a href="https://tally.so" class="arrow-link arrow-link--white" data-fade data-delay="3" target="_blank" rel="noopener">
+      Solicitar diagnóstico →
+    </a>
+  </div>
 </section>
 
 <section class="section problema" id="problema">
@@ -349,266 +385,6 @@
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
   document.querySelectorAll('[data-fade]:not(.hero [data-fade])').forEach(el => io.observe(el));
-</script>
-
-<script>
-(function () {
-  'use strict';
-
-  function hexToRgb(hex) {
-    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return m ? [parseInt(m[1],16)/255, parseInt(m[2],16)/255, parseInt(m[3],16)/255] : [1,1,1];
-  }
-
-  function processImage(img) {
-    const c = document.createElement('canvas');
-    c.width  = img.naturalWidth  || img.width  || 1;
-    c.height = img.naturalHeight || img.height || 1;
-    const ctx = c.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    const imageData = ctx.getImageData(0, 0, c.width, c.height);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i], g = data[i + 1], b = data[i + 2];
-      if (r < 30 && g < 30 && b < 30) {
-        // Dark pixel = background → fully transparent
-        data[i]     = 0;
-        data[i + 1] = 0;
-        data[i + 2] = 0;
-        data[i + 3] = 0;
-      } else {
-        // Bright pixel = shape → neutral grey for shader depth map
-        data[i]     = 128;
-        data[i + 1] = 128;
-        data[i + 2] = 128;
-        data[i + 3] = 255;
-      }
-    }
-    ctx.putImageData(imageData, 0, 0);
-    return c;
-  }
-
-  const VERT = `#version 300 es
-precision highp float;
-in vec2 a_position;
-out vec2 vP;
-void main(){vP=a_position*.5+.5;gl_Position=vec4(a_position,0.,1.);}`;
-
-  const FRAG = `#version 300 es
-precision highp float;
-in vec2 vP;
-out vec4 fragColor;
-uniform sampler2D u_image;
-uniform float u_time, u_seed, u_scale, u_refraction, u_blur,
-              u_liquid, u_speed, u_brightness, u_contrast,
-              u_angle, u_fresnel, u_patternSharpness,
-              u_waveAmplitude, u_noiseScale,
-              u_chromaticSpread, u_distortion, u_contour;
-uniform vec3 u_lightColor, u_darkColor, u_tintColor;
-vec3 mod289(vec3 x){ return x - floor(x*(1./289.))*289.; }
-vec2 mod289(vec2 x){ return x - floor(x*(1./289.))*289.; }
-vec3 permute(vec3 x){ return mod289(((x*34.)+1.)*x); }
-float sn(vec2 v){
-  const vec4 C = vec4(.211324865405187,.366025403784439,-.577350269189626,.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy));
-  vec2 x0 = v - i + dot(i, C.xx);
-  vec2 i1 = x0.x > x0.y ? vec2(1,0) : vec2(0,1);
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-  i = mod289(i);
-  vec3 p = permute(permute(i.y + vec3(0,i1.y,1)) + i.x + vec3(0,i1.x,1));
-  vec3 m = max(.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.);
-  m *= m * m * m;
-  vec3 gx = 2.*fract(p*C.www) - 1.;
-  vec3 h  = abs(gx) - .5;
-  vec3 ox = floor(gx + .5);
-  vec3 a0 = gx - ox;
-  m *= 1.79284291400159 - .85373472095314*(a0*a0 + h*h);
-  vec3 g;
-  g.x  = a0.x *x0.x  + h.x *x0.y;
-  g.yz = a0.yz*x12.xz + h.yz*x12.yw;
-  return 130.*dot(m, g);
-}
-float fbm(vec2 p){
-  float v = 0., a = .5;
-  mat2  r = mat2(.8,.6,-.6,.8);
-  for(int i=0;i<5;i++){ v+=a*sn(p); p=r*p*2.1+vec2(1.7,9.2); a*=.5; }
-  return v;
-}
-void main(){
-  vec2 uv = vP;
-  float mask = texture(u_image, uv).a;
-  if(mask < .004){ fragColor = vec4(0); return; }
-  float t  = u_time * u_speed;
-  float ca = cos(u_angle), sa = sin(u_angle);
-  mat2  rot = mat2(ca,-sa, sa, ca);
-  vec2 st = rot*(uv-.5)*u_scale*u_noiseScale + vec2(u_seed*.031 + .5);
-  float dx = sn(st*1.4 + vec2(t*.7, t*.2)) * u_distortion;
-  float dy = sn(st*1.4 + vec2(t*.2, t*.7) + vec2(3.7,1.9)) * u_distortion;
-  vec2 sd   = st + vec2(dx,dy)*u_refraction*5.;
-  float p1   = fbm(sd + vec2(t*.25, t*.18));
-  float p2   = fbm(sd*1.3 + vec2(-t*.14, t*.2) + vec2(4.7,2.3));
-  float wave = sin(p1*6.2832*u_waveAmplitude + t)*.5 + .5;
-  float pat = mix(p1*.5+.5, wave, u_liquid);
-  pat = mix(pat, p2*.5+.5, .25);
-  pat = clamp(pat, 0., 1.);
-  pat = pow(pat, 1./max(u_patternSharpness,.001));
-  pat = (pat-.5)*(1.+u_contrast) + .5;
-  pat = clamp(pat*u_brightness, 0., 1.);
-  vec3 col = mix(u_darkColor, u_lightColor, pat);
-  col = mix(col, u_tintColor, pat*.1);
-  if(u_contour > .001){
-    float e = pow(1.-abs(pat*2.-1.), 3.) * u_contour;
-    col = mix(col, u_lightColor, e*.7);
-  }
-  if(u_chromaticSpread > .001){
-    float off = u_chromaticSpread*.02;
-    float pr = clamp(pow(max(fbm(sd+vec2(off,0.)+vec2(t*.25,t*.18))*.5+.5,0.), 1./u_patternSharpness),0.,1.);
-    float pb = clamp(pow(max(fbm(sd-vec2(off,0.)+vec2(t*.25,t*.18))*.5+.5,0.), 1./u_patternSharpness),0.,1.);
-    col.r = mix(u_darkColor.r, u_lightColor.r, clamp((pr-.5)*(1.+u_contrast)*u_brightness+.5,0.,1.));
-    col.b = mix(u_darkColor.b, u_lightColor.b, clamp((pb-.5)*(1.+u_contrast)*u_brightness+.5,0.,1.));
-  }
-  float rim = pow(max(1.-length(uv-.5)*1.8, 0.), max(u_fresnel*3.,.1));
-  col = mix(col, u_lightColor, rim*.12);
-  float alpha = u_blur > 0. ? smoothstep(0., u_blur*10., mask) : step(.004, mask);
-  fragColor = vec4(col*alpha, alpha);
-}`;
-
-  const P = {
-    seed:42, scale:4, refraction:.01, blur:.015, liquid:.75, speed:.15,
-    brightness:2, contrast:.6, angle:0, fresnel:1,
-    lightColor:'#ffffff', darkColor:'#000000', tintColor:'#ffffff',
-    patternSharpness:1.8, waveAmplitude:1, noiseScale:.5,
-    chromaticSpread:0, distortion:1, contour:.2,
-    imageSrc:'PNG blanco.png'
-  };
-
-  const canvas = document.getElementById('hero-logo');
-  if (!canvas) return;
-
-  const dpr  = Math.min(window.devicePixelRatio || 1, 2);
-  const SIZE = 1000;
-  canvas.width  = SIZE * dpr;
-  canvas.height = Math.round(SIZE * dpr / 4);
-
-  const gl = canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: false });
-  if (!gl) return;
-
-  function mkShader(type, src) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-      console.error('[metallic] shader:', gl.getShaderInfoLog(s));
-      return null;
-    }
-    return s;
-  }
-
-  const vs = mkShader(gl.VERTEX_SHADER, VERT);
-  const fs = mkShader(gl.FRAGMENT_SHADER, FRAG);
-  if (!vs || !fs) return;
-  const prog = gl.createProgram();
-  gl.attachShader(prog, vs); gl.attachShader(prog, fs);
-  gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-    console.error('[metallic] program:', gl.getProgramInfoLog(prog));
-    return;
-  }
-  gl.useProgram(prog);
-
-  const vao = gl.createVertexArray();
-  gl.bindVertexArray(vao);
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-  const aPos = gl.getAttribLocation(prog, 'a_position');
-  gl.enableVertexAttribArray(aPos);
-  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-  const UL = {};
-  ['u_image','u_time','u_seed','u_scale','u_refraction','u_blur',
-   'u_liquid','u_speed','u_brightness','u_contrast','u_angle','u_fresnel',
-   'u_lightColor','u_darkColor','u_tintColor','u_patternSharpness',
-   'u_waveAmplitude','u_noiseScale','u_chromaticSpread','u_distortion','u_contour']
-  .forEach(n => UL[n] = gl.getUniformLocation(prog, n));
-
-  const tex = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-                new Uint8Array([255,255,255,255]));
-
-  function uploadTex(src) {
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
-    const aspect = src.width / src.height;
-    canvas.height = Math.round(canvas.width / aspect);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-  }
-
-  gl.uniform1f(UL.u_seed,             P.seed);
-  gl.uniform1f(UL.u_scale,            P.scale);
-  gl.uniform1f(UL.u_refraction,       P.refraction);
-  gl.uniform1f(UL.u_blur,             P.blur);
-  gl.uniform1f(UL.u_liquid,           P.liquid);
-  gl.uniform1f(UL.u_speed,            P.speed);
-  gl.uniform1f(UL.u_brightness,       P.brightness);
-  gl.uniform1f(UL.u_contrast,         P.contrast);
-  gl.uniform1f(UL.u_angle,            P.angle);
-  gl.uniform1f(UL.u_fresnel,          P.fresnel);
-  gl.uniform1f(UL.u_patternSharpness, P.patternSharpness);
-  gl.uniform1f(UL.u_waveAmplitude,    P.waveAmplitude);
-  gl.uniform1f(UL.u_noiseScale,       P.noiseScale);
-  gl.uniform1f(UL.u_chromaticSpread,  P.chromaticSpread);
-  gl.uniform1f(UL.u_distortion,       P.distortion);
-  gl.uniform1f(UL.u_contour,          P.contour);
-  gl.uniform3fv(UL.u_lightColor,      hexToRgb(P.lightColor));
-  gl.uniform3fv(UL.u_darkColor,       hexToRgb(P.darkColor));
-  gl.uniform3fv(UL.u_tintColor,       hexToRgb(P.tintColor));
-  gl.uniform1i(UL.u_image, 0);
-
-  gl.enable(gl.BLEND);
-  gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-                       gl.ONE,       gl.ONE_MINUS_SRC_ALPHA);
-  gl.clearColor(0, 0, 0, 0);
-  gl.viewport(0, 0, canvas.width, canvas.height);
-
-  const t0 = performance.now();
-  function render() {
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform1f(UL.u_time, (performance.now() - t0) / 1000);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(render);
-  }
-
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = function () { uploadTex(processImage(img)); render(); };
-  img.onerror = function () {
-    document.fonts.ready.then(function () {
-      const fc = document.createElement('canvas');
-      const fontSize = Math.max(120, Math.min(Math.round(window.innerWidth * 0.20), 280));
-      fc.width = Math.max(1000, fontSize * 5);
-      fc.height = Math.round(fontSize * 1.4);
-      const fctx = fc.getContext('2d');
-      fctx.clearRect(0, 0, fc.width, fc.height);
-      fctx.fillStyle = '#808080';
-      fctx.font = `${fontSize}px "Bebas Neue", sans-serif`;
-      fctx.textAlign = 'center';
-      fctx.textBaseline = 'middle';
-      fctx.fillText('NODO', fc.width / 2, fc.height / 2);
-      uploadTex(fc);
-      render();
-    });
-  };
-  img.src = P.imageSrc;
-
-}());
 </script>
 
 </body>
