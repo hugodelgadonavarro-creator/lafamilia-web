@@ -1,446 +1,368 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NODO — Ingeniería Conductual</title>
-  <meta name="description" content="Ingeniería conductual. Ayudo a personas a cambiar sus hábitos y conductas para lograr su objetivo en 60 días.">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
-
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
-    html { scroll-behavior: smooth; }
-    :root {
-      --black: #000000;
-      --white: #FFFFFF;
-      --azul:  #001AFF;
-      --display: 'Bebas Neue', sans-serif;
-      --sans:    'Space Grotesk', sans-serif;
-      --pad:     48px;
-    }
-    body {
-      background: var(--white);
-      color: var(--black);
-      font-family: var(--sans);
-      font-weight: 300;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-    a { cursor: pointer; }
-    [data-fade] {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
-    }
-    [data-fade].visible { opacity: 1; transform: none; }
-    .eyebrow {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: 11px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-    /* CTAs — borde duro, sin redondeo */
-    .arrow-link {
-      display: inline-block;
-      text-decoration: none;
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      padding: 10px 24px;
-      border: 1px solid currentColor;
-      transition: background .2s, color .2s, border-color .2s;
-    }
-    .arrow-link:hover {
-      background: var(--azul);
-      color: var(--white) !important;
-      border-color: var(--azul);
-    }
-    .arrow-link--white { color: var(--white); }
-    .arrow-link--black { color: var(--black); }
-    /* Tipografía display — agresiva */
-    .logo-text {
-      font-family: var(--display);
-      font-size: 26px;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      text-decoration: none;
-      -webkit-font-smoothing: none;
-    }
-    .logo-text--white { color: var(--white); }
-    .logo-text--black { color: var(--black); }
-    nav {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 200;
-      background: var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px var(--pad);
-      border-bottom: 1px solid var(--azul);
-    }
-    .nav-cta {
-      color: var(--white);
-      text-decoration: none;
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      opacity: .7;
-      transition: opacity .25s;
-    }
-    .nav-cta:hover { opacity: 1; }
-    /* Hero — flex, contenido centrado verticalmente */
-    .hero {
-      background: var(--black);
-      min-height: 100vh;
-      padding: 80px var(--pad) 40px;
-      display: flex;
-      align-items: center;
-      gap: 64px;
-    }
-    .hero-left {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .hero-right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: center;
-      text-align: right;
-    }
-    #hero-logo {
-      display: block;
-      width: 100%;
-      max-width: 700px;
-      height: auto;
-      overflow: visible;
-      margin-bottom: 40px;
-    }
-    /* Eyebrow hero en azul eléctrico */
-    .hero-eyebrow { color: var(--azul); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 24px; }
-    /* Bloque INTENCIÓN / CONDUCTA */
-    .hero-dicotomia {
-      margin-bottom: 40px;
-      border-right: 4px solid var(--azul);
-      padding-right: 20px;
-    }
-    .hero-dic-item {
-      display: flex;
-      align-items: baseline;
-      justify-content: flex-end;
-      gap: 14px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .hero-dic-item:first-child { border-top: 1px solid rgba(255,255,255,.08); }
-    .hero-dic-marker {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: 10px;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.35);
-    }
-    .hero-dic-word {
-      font-family: var(--display);
-      font-size: clamp(36px, 4vw, 60px);
-      letter-spacing: -0.02em;
-      -webkit-font-smoothing: none;
-      line-height: 1;
-    }
-    .hero-dic-word.off {
-      color: rgba(255,255,255,.18);
-      text-decoration: line-through;
-      text-decoration-color: rgba(255,255,255,.25);
-    }
-    .hero-dic-word.on { color: var(--azul); }
-    /* Eslogan columna derecha */
-    .hero-sub {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: rgba(255,255,255,.7);
-      max-width: 360px;
-      margin-bottom: 40px;
-    }
-    /* Separadores de sección en azul eléctrico */
-    .section { padding: 120px var(--pad); border-top: 1px solid var(--azul); }
-    .problema { background: var(--white); }
-    .problema-headline {
-      font-family: var(--display);
-      font-size: clamp(56px, 9vw, 120px);
-      line-height: .95;
-      letter-spacing: -0.02em;
-      -webkit-font-smoothing: none;
-      color: var(--black);
-      margin-bottom: 96px;
-      max-width: 860px;
-    }
-    .problema-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--black); }
-    .problema-item { padding: 44px 44px 44px 0; border-bottom: 1px solid var(--black); }
-    .problema-item:nth-child(even) { border-left: 1px solid var(--black); padding-left: 44px; padding-right: 0; }
-    .problema-item-title { font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; }
-    .problema-item-body { font-family: var(--sans); font-weight: 300; font-size: 14px; line-height: 1.9; letter-spacing: .01em; }
-    .proceso { background: var(--white); }
-    .proceso-eyebrow { margin-bottom: 72px; }
-    .proceso-list { display: flex; flex-direction: column; }
-    .proceso-step {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      padding: 64px 0;
-      border-top: 1px solid var(--black);
-      overflow: hidden;
-    }
-    .proceso-step:last-child { border-bottom: 1px solid var(--black); }
-    .step-ghost {
-      position: absolute; right: -.01em; top: 50%; transform: translateY(-50%);
-      font-family: var(--display);
-      font-size: clamp(180px, 24vw, 280px);
-      line-height: 1; color: var(--black); opacity: .04;
-      letter-spacing: -0.02em; pointer-events: none; user-select: none;
-    }
-    .step-left { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
-    .step-index { font-family: var(--sans); font-weight: 300; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; opacity: .38; }
-    .step-title { font-family: var(--display); font-size: clamp(40px, 4.5vw, 64px); line-height: .95; letter-spacing: -0.02em; -webkit-font-smoothing: none; }
-    .step-right { position: relative; z-index: 1; padding-left: 48px; display: flex; align-items: center; }
-    .step-body { font-family: var(--sans); font-weight: 300; font-size: 14px; line-height: 1.9; letter-spacing: .01em; max-width: 480px; }
-    /* Planes — solo borde izquierdo azul, sin cajas */
-    .planes { background: var(--black); }
-    .planes-eyebrow { color: var(--white); opacity: .38; margin-bottom: 80px; }
-    .planes-grid { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 48px; }
-    .plan { padding: 56px 0 56px 32px; border-left: 4px solid var(--azul); }
-    .plan-badge { font-family: var(--sans); font-weight: 300; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--white); opacity: .35; margin-bottom: 20px; }
-    /* Nombre del plan en azul */
-    .plan-name { font-family: var(--display); font-size: 64px; color: var(--azul); line-height: .9; letter-spacing: -0.02em; -webkit-font-smoothing: none; margin-bottom: 16px; }
-    /* Precio sin opacidad, tracking amplio */
-    .plan-price { font-family: var(--sans); font-weight: 300; font-size: 13px; letter-spacing: 0.15em; color: var(--white); margin-bottom: 44px; }
-    .plan-features { list-style: none; margin-bottom: 52px; }
-    .plan-features li { font-family: var(--sans); font-weight: 300; font-size: 13px; line-height: 1; color: var(--white); opacity: .58; letter-spacing: .01em; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.09); }
-    .plan-features li:first-child { border-top: 1px solid rgba(255,255,255,.09); }
-    .cta-section { background: var(--black); border-top: 1px solid var(--azul); padding: 160px var(--pad); }
-    .cta-headline { font-family: var(--display); font-size: clamp(64px, 11vw, 160px); line-height: .9; letter-spacing: -0.02em; -webkit-font-smoothing: none; color: var(--white); text-align: center; margin-bottom: 100px; }
-    .cta-conditions { max-width: 560px; margin: 0 auto 80px; border-top: 1px solid rgba(255,255,255,.16); }
-    .cta-condition { font-family: var(--sans); font-weight: 300; font-size: 13px; line-height: 1; letter-spacing: .02em; color: var(--white); opacity: .6; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
-    .cta-condition::before { content: "\2014\00a0\00a0"; opacity: .35; }
-    .cta-btn { display: flex; justify-content: center; }
-    footer { background: var(--black); border-top: 1px solid var(--azul); padding: 32px var(--pad); display: flex; align-items: center; justify-content: space-between; }
-    .footer-info { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
-    .footer-info a { font-family: var(--sans); font-weight: 300; font-size: 11px; letter-spacing: .08em; color: var(--white); text-decoration: none; opacity: .38; transition: opacity .25s; }
-    .footer-info a:hover { opacity: .9; }
-    @media (max-width: 880px) {
-      :root { --pad: 24px; }
-      .section { padding: 80px var(--pad); }
-      .cta-section { padding: 96px var(--pad); }
-      .problema-grid { grid-template-columns: 1fr; }
-      .problema-item { padding: 36px 0; }
-      .problema-item:nth-child(even) { border-left: none; padding-left: 0; }
-      .proceso-step { grid-template-columns: 1fr; gap: 18px; padding: 48px 0; }
-      .step-right { padding-left: 0; }
-      .step-ghost { display: none; }
-      .planes-grid { grid-template-columns: 1fr; row-gap: 40px; column-gap: 0; }
-      .plan { padding-left: 24px; }
-      .hero { flex-direction: column; align-items: flex-start; gap: 48px; }
-      .hero-left, .hero-right { flex: none; width: 100%; }
-      .hero-right { align-items: flex-start; text-align: left; }
-      .hero-dicotomia { border-right: none; border-left: 4px solid var(--azul); padding-right: 0; padding-left: 16px; }
-      .hero-dic-item { justify-content: flex-start; }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="La Familia Restaurante en Yuncos (Toledo). Cocina tradicional española: cocido madrileño, jamón ibérico, carnes guisadas y callos. Reserva tu mesa." />
+  <title>La Familia Restaurante – Yuncos, Toledo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<nav>
-  <img src="PNG blanco.png" alt="NODO" style="width:120px;display:block;">
-  <a href="https://tally.so" class="nav-cta" target="_blank" rel="noopener">Solicitar diagnóstico</a>
-</nav>
+  <!-- ===================== HEADER ===================== -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#inicio" class="header__logo">
+        <span class="header__logo-main">LA FAMILIA</span>
+        <span class="header__logo-sub">Restaurante</span>
+      </a>
 
-<section class="hero" id="inicio">
+      <nav class="nav" id="nav" aria-label="Navegacion principal">
+        <ul class="nav__list">
+          <li><a href="#inicio" class="nav__link">Inicio</a></li>
+          <li><a href="#nosotros" class="nav__link">Nosotros</a></li>
+          <li><a href="#carta" class="nav__link">Carta</a></li>
+          <li><a href="#horario" class="nav__link">Horario</a></li>
+          <li><a href="#contacto" class="nav__link">Contacto</a></li>
+        </ul>
+      </nav>
 
-  <!-- Columna izquierda: logo + eslogan + CTA -->
-  <div class="hero-left">
-    <p class="eyebrow hero-eyebrow" data-fade data-delay="0">[*Ingeniería Conductual*]</p>
-    <svg id="hero-logo"
-         viewBox="758 1283 2184 380"
-         style="width:100%;max-width:700px;display:block;"
-         xmlns="http://www.w3.org/2000/svg"
-         data-fade data-delay="1"
-         role="img" aria-label="NODO">
-      <defs>
-        <linearGradient id="nodo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="100%" stop-color="#001AFF"/>
-        </linearGradient>
-      </defs>
-      <path fill="url(#nodo-grad)" d="M763 1659C762.448 1659 762 1658.55 762 1658V1286.69C762 1286.13 762.448 1285.69 763 1285.69H868.971C869.233 1285.69 869.485 1285.79 869.673 1285.97L1098.37 1511.23C1099 1511.85 1100.07 1511.41 1100.07 1510.52L1099.67 1286.69C1099.67 1286.14 1100.11 1285.69 1100.67 1285.69H1200.5C1201.05 1285.69 1201.5 1286.13 1201.5 1286.69V1658C1201.5 1658.55 1201.05 1659 1200.5 1659H1093.37C1093.1 1659 1092.84 1658.89 1092.65 1658.7L868.174 1426.67C867.548 1426.02 866.452 1426.46 866.455 1427.36L867.27 1658C867.272 1658.55 866.824 1659 866.27 1659H763Z"/>
-      <path fill="url(#nodo-grad)" d="M1569.96 1649.84H1472.25C1472.02 1649.84 1471.81 1649.76 1471.63 1649.63L1409.97 1601.22L1347.48 1547.99C1347.26 1547.8 1347.13 1547.53 1347.13 1547.23L1347.13 1393.91C1347.13 1393.6 1347.28 1393.3 1347.53 1393.11L1409.97 1346.02L1472.18 1292.05C1472.37 1291.89 1472.6 1291.8 1472.84 1291.8L1664.08 1291.27C1664.31 1291.27 1664.52 1291.34 1664.7 1291.48L1731.88 1343.1L1789.77 1393.87V1547.23L1726.1 1601.22L1664.7 1649.62C1664.52 1649.76 1664.3 1649.84 1664.08 1649.84H1569.96ZM1568.03 1559.4H1617.8L1654.78 1532.68L1683.83 1508.63C1684.05 1508.44 1684.19 1508.15 1684.19 1507.86V1433.28L1648.99 1405.81L1618.4 1382.45C1618.23 1382.31 1618.01 1382.24 1617.79 1382.24H1518.5L1483.22 1405.81L1453.05 1431.95C1452.83 1432.14 1452.71 1432.42 1452.71 1432.71V1508.37L1483.22 1532.68L1517.93 1559.19C1518.1 1559.33 1518.32 1559.4 1518.54 1559.4H1568.03Z"/>
-      <path fill="url(#nodo-grad)" d="M1954.16 1655.4C1953.6 1655.4 1953.16 1654.95 1953.16 1654.4V1284C1953.16 1283.45 1953.6 1283 1954.16 1283H2152.3L2252.8 1314.17L2316.39 1338.19L2349.19 1402.7L2377.57 1468.82L2351.11 1537.28L2316.91 1600.83L2256.73 1627.66L2152.58 1655.37C2152.5 1655.39 2152.41 1655.4 2152.33 1655.4H1954.16ZM2064.95 1585.31V1353.84C2064.95 1352.91 2063.78 1352.49 2063.18 1353.2L2047.13 1372.33C2046.58 1372.98 2047.04 1373.97 2047.89 1373.97H2149.48L2194.98 1388.54L2233.93 1403.06L2248.95 1433.75L2262.41 1468.84L2248.95 1503.74L2233.93 1534.82L2194.98 1550.41L2149.78 1564.38H2049.41C2048.59 1564.43 2048.12 1565.36 2048.61 1566.02L2063.14 1585.9C2063.71 1586.68 2064.95 1586.27 2064.95 1585.31Z"/>
-      <path fill="url(#nodo-grad)" d="M2718.2 1649.63H2620.48L2558.2 1601.01L2495.36 1547.02V1393.7L2558.2 1345.81L2620.42 1291.84L2716.27 1291.86L2812.32 1291.06L2880.12 1342.9L2938 1393.66V1547.02L2874.33 1601.01L2812.93 1649.42C2812.76 1649.55 2812.54 1649.63 2812.31 1649.63H2718.2ZM2716.27 1559.19H2766.04L2803.01 1532.47L2832.06 1508.42C2832.29 1508.23 2832.42 1507.95 2832.42 1507.65V1433.07L2797.23 1405.6L2766.63 1382.24H2666.74L2631.45 1405.6L2601.29 1431.74C2601.07 1431.93 2600.94 1432.21 2600.94 1432.5V1508.16L2631.45 1532.47L2666.16 1558.98C2666.34 1559.12 2666.55 1559.19 2666.77 1559.19H2716.27Z"/>
-    </svg>
-    <p class="hero-sub" data-fade data-delay="2">
-      La intención no cambia nada.<br>La conducta, sí.
-    </p>
-    <a href="https://tally.so" class="arrow-link arrow-link--white" data-fade data-delay="3" target="_blank" rel="noopener">
-      Solicitar diagnóstico →
-    </a>
-  </div>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+    </div>
+  </header>
 
-  <!-- Columna derecha: bloque INTENCIÓN / CONDUCTA -->
-  <div class="hero-right">
-    <div class="hero-dicotomia" data-fade data-delay="2">
-      <div class="hero-dic-item">
-        <span class="hero-dic-marker">no</span>
-        <span class="hero-dic-word off">INTENCIÓN</span>
+  <main>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="inicio" aria-label="Bienvenida">
+      <div class="hero__content">
+        <p class="hero__eyebrow">Bienvenidos a</p>
+        <h1 class="hero__title">LA FAMILIA</h1>
+        <p class="hero__subtitle">Restaurante</p>
+        <p class="hero__tagline">Cocina tradicional española en el corazón de Yuncos</p>
+        <a
+          href="https://wa.me/34671091781?text=Hola%2C%20me%20gustar%C3%ADa%20reservar%20una%20mesa%20en%20La%20Familia%20Restaurante."
+          class="btn btn--primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Reservar mesa
+        </a>
       </div>
-      <div class="hero-dic-item">
-        <span class="hero-dic-marker">sí</span>
-        <span class="hero-dic-word on">CONDUCTA</span>
+      <div class="hero__scroll-hint" aria-hidden="true">
+        <span>&#8595;</span>
+      </div>
+    </section>
+
+    <!-- ===================== NOSOTROS ===================== -->
+    <section class="section nosotros" id="nosotros" aria-labelledby="nosotros-heading">
+      <div class="container">
+        <div class="section__header fade-in">
+          <span class="section__tag">Quiénes somos</span>
+          <h2 class="section__title" id="nosotros-heading">Una cocina hecha con alma</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+        </div>
+        <div class="nosotros__grid fade-in">
+          <div class="nosotros__text">
+            <p>
+              La Familia nació en junio de 2026 con una misión sencilla: traer a la mesa los sabores
+              de siempre, los que huelen a domingo en casa y a guiso que lleva horas al fuego.
+              Somos un restaurante familiar en Yuncos, Toledo, con el orgullo de ofrecer una cocina
+              honesta, generosa y llena de cariño.
+            </p>
+            <p>
+              Nuestra carta celebra lo mejor de la tradición española: el cocido que reconforta,
+              el jamón que enamora, los callos que conquistan y las carnes guisadas que hacen
+              repetir. Todo elaborado con producto de calidad y el tiempo que cada plato merece.
+            </p>
+            <p>
+              Ven a conocernos. En La Familia, la mesa siempre está puesta para ti.
+            </p>
+          </div>
+          <div class="nosotros__values">
+            <div class="value-card">
+              <span class="value-card__icon" aria-hidden="true">&#127968;</span>
+              <h3 class="value-card__title">Ambiente familiar</h3>
+              <p class="value-card__text">Un espacio cálido donde sentirte como en casa desde el primer momento.</p>
+            </div>
+            <div class="value-card">
+              <span class="value-card__icon" aria-hidden="true">&#129753;</span>
+              <h3 class="value-card__title">Producto de calidad</h3>
+              <p class="value-card__text">Ingredientes seleccionados para platos que hacen honor a la tradición.</p>
+            </div>
+            <div class="value-card">
+              <span class="value-card__icon" aria-hidden="true">&#128293;</span>
+              <h3 class="value-card__title">Cocina al fuego lento</h3>
+              <p class="value-card__text">Sin prisas. Cada guiso lleva el tiempo que necesita para ser perfecto.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CARTA ===================== -->
+    <section class="section carta" id="carta" aria-labelledby="carta-heading">
+      <div class="container">
+        <div class="section__header fade-in">
+          <span class="section__tag">Nuestra cocina</span>
+          <h2 class="section__title" id="carta-heading">Sabores de siempre</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+          <p class="section__subtitle">Platos elaborados con recetas tradicionales y producto de primera calidad</p>
+        </div>
+
+        <div class="dishes">
+
+          <article class="dish-card fade-in" style="--dish-bg: linear-gradient(145deg, #7a2d1a 0%, #c0551e 50%, #8b3a1a 100%);">
+            <div class="dish-card__visual" aria-hidden="true">
+              <span class="dish-card__emoji">&#129368;</span>
+            </div>
+            <div class="dish-card__body">
+              <h3 class="dish-card__title">Cocido Madrileño</h3>
+              <p class="dish-card__desc">
+                El plato más representativo de la cocina española. Garbanzos, carnes de cerdo
+                y ternera, verduras de temporada y fideos. Un cocido de los de verdad,
+                servido en tres vuelcos tal y como manda la tradición.
+              </p>
+              <span class="dish-card__tag">Especialidad de la casa</span>
+            </div>
+          </article>
+
+          <article class="dish-card fade-in" style="--dish-bg: linear-gradient(145deg, #3d1a0a 0%, #7a3d10 50%, #5c2b0e 100%);">
+            <div class="dish-card__visual" aria-hidden="true">
+              <span class="dish-card__emoji">&#129366;</span>
+            </div>
+            <div class="dish-card__body">
+              <h3 class="dish-card__title">Jamón Ibérico</h3>
+              <p class="dish-card__desc">
+                Cortado a mano, con el cuidado y el respeto que merece el mejor jamón.
+                Cada loncha es una experiencia en sí misma: sabor intenso, grasa infiltrada
+                y ese aroma inconfundible que lo dice todo.
+              </p>
+              <span class="dish-card__tag">Producto selecto</span>
+            </div>
+          </article>
+
+          <article class="dish-card fade-in" style="--dish-bg: linear-gradient(145deg, #4a2a0e 0%, #8c4e18 50%, #6b3810 100%);">
+            <div class="dish-card__visual" aria-hidden="true">
+              <span class="dish-card__emoji">&#127858;</span>
+            </div>
+            <div class="dish-card__body">
+              <h3 class="dish-card__title">Carnes Guisadas</h3>
+              <p class="dish-card__desc">
+                Rabo de toro, carrilleras al vino tinto, carne de olla... Guisos de cuchara
+                con horas de cocción lenta para lograr esa textura que se deshace sola
+                y esa salsa que pide pan sin parar.
+              </p>
+              <span class="dish-card__tag">Cocina de cuchara</span>
+            </div>
+          </article>
+
+          <article class="dish-card fade-in" style="--dish-bg: linear-gradient(145deg, #6b1a0a 0%, #a82b1a 50%, #7a2010 100%);">
+            <div class="dish-card__visual" aria-hidden="true">
+              <span class="dish-card__emoji">&#129749;</span>
+            </div>
+            <div class="dish-card__body">
+              <h3 class="dish-card__title">Callos a la Madrileña</h3>
+              <p class="dish-card__desc">
+                Callos, morro y pata de ternera guisados en salsa de tomate con chorizo,
+                morcilla y pimentón. Un plato contundente, sabroso y lleno de carácter
+                que no decepciona a quien de verdad sabe de cocina.
+              </p>
+              <span class="dish-card__tag">Plato tradicional</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HORARIO ===================== -->
+    <section class="section horario" id="horario" aria-labelledby="horario-heading">
+      <div class="container">
+        <div class="section__header fade-in">
+          <span class="section__tag">Cuándo visitarnos</span>
+          <h2 class="section__title" id="horario-heading">Horario</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="horario__wrapper fade-in">
+          <table class="horario__table" aria-label="Horario de apertura">
+            <thead>
+              <tr>
+                <th scope="col">Día</th>
+                <th scope="col">Horario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="horario__row--closed">
+                <td>Lunes</td>
+                <td><span class="badge badge--closed">Cerrado</span></td>
+              </tr>
+              <tr>
+                <td>Martes</td>
+                <td>9:00 – 18:00</td>
+              </tr>
+              <tr>
+                <td>Miércoles</td>
+                <td>9:00 – 18:00</td>
+              </tr>
+              <tr>
+                <td>Jueves</td>
+                <td>9:00 – 18:00</td>
+              </tr>
+              <tr>
+                <td>Viernes</td>
+                <td>9:00 – 18:00</td>
+              </tr>
+              <tr>
+                <td>Sábado</td>
+                <td>9:00 – 18:00</td>
+              </tr>
+              <tr>
+                <td>Domingo</td>
+                <td>9:00 – 18:00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="horario__note">
+            <span class="horario__note-icon" aria-hidden="true">&#128197;</span>
+            <p>Abierto de martes a domingo. Para grupos grandes o eventos especiales, contacta con nosotros para acordar horario.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACTO ===================== -->
+    <section class="section contacto" id="contacto" aria-labelledby="contacto-heading">
+      <div class="container">
+        <div class="section__header fade-in">
+          <span class="section__tag">Encuéntranos</span>
+          <h2 class="section__title" id="contacto-heading">Contacto</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="contacto__grid fade-in">
+
+          <div class="contacto__info">
+            <h3 class="contacto__info-title">Visítanos</h3>
+
+            <address class="contacto__details">
+              <div class="contacto__item">
+                <span class="contacto__item-icon" aria-hidden="true">&#128205;</span>
+                <div>
+                  <strong>Dirección</strong>
+                  <p>Calle Juan Francisco Higueras, 45<br />Yuncos, Toledo</p>
+                </div>
+              </div>
+
+              <div class="contacto__item">
+                <span class="contacto__item-icon" aria-hidden="true">&#128222;</span>
+                <div>
+                  <strong>Teléfono</strong>
+                  <p><a href="tel:+34671091781" class="contacto__link">671 09 17 81</a></p>
+                </div>
+              </div>
+
+              <div class="contacto__item">
+                <span class="contacto__item-icon" aria-hidden="true">&#128336;</span>
+                <div>
+                  <strong>Horario</strong>
+                  <p>Martes a Domingo: 9:00 – 18:00<br />Lunes: Cerrado</p>
+                </div>
+              </div>
+
+              <div class="contacto__item">
+                <span class="contacto__item-icon" aria-hidden="true">&#128247;</span>
+                <div>
+                  <strong>Instagram</strong>
+                  <p>
+                    <a
+                      href="https://instagram.com/lafamiliayuncos"
+                      class="contacto__link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >@lafamiliayuncos</a>
+                  </p>
+                </div>
+              </div>
+            </address>
+
+            <a
+              href="https://wa.me/34671091781?text=Hola%2C%20me%20gustar%C3%ADa%20reservar%20una%20mesa%20en%20La%20Familia%20Restaurante."
+              class="btn btn--whatsapp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              &#128172; Reservar por WhatsApp
+            </a>
+          </div>
+
+          <div class="contacto__map">
+            <iframe
+              src="https://maps.google.com/maps?q=Calle+Juan+Francisco+Higueras,45,Yuncos,Toledo&output=embed"
+              width="100%"
+              height="100%"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Ubicación de La Familia Restaurante en Yuncos, Toledo"
+            ></iframe>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" aria-label="Pie de página">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <p class="footer__logo">LA FAMILIA</p>
+          <p class="footer__tagline">Restaurante · Yuncos, Toledo</p>
+        </div>
+
+        <nav class="footer__nav" aria-label="Navegación secundaria">
+          <a href="#inicio" class="footer__nav-link">Inicio</a>
+          <a href="#nosotros" class="footer__nav-link">Nosotros</a>
+          <a href="#carta" class="footer__nav-link">Carta</a>
+          <a href="#horario" class="footer__nav-link">Horario</a>
+          <a href="#contacto" class="footer__nav-link">Contacto</a>
+        </nav>
+
+        <div class="footer__social">
+          <a
+            href="https://instagram.com/lafamiliayuncos"
+            class="footer__social-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de La Familia Restaurante"
+          >
+            <svg class="footer__social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+            @lafamiliayuncos
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>&copy; 2026 La Familia Restaurante &middot; Yuncos, Toledo &middot; <a href="tel:+34671091781" class="footer__tel">671 09 17 81</a></p>
       </div>
     </div>
-  </div>
+  </footer>
 
-</section>
-
-<section class="section problema" id="problema">
-  <h2 class="problema-headline" data-fade>
-    La información<br>no cambia<br>la conducta.
-  </h2>
-  <div class="problema-grid">
-    <div class="problema-item" data-fade>
-      <p class="problema-item-title">Los cursos no funcionan.</p>
-      <p class="problema-item-body">La información sin intervención conductual no produce cambio sostenido.</p>
-    </div>
-    <div class="problema-item" data-fade>
-      <p class="problema-item-title">La motivación no funciona.</p>
-      <p class="problema-item-body">Depende de un estado emocional, no de un sistema replicable.</p>
-    </div>
-    <div class="problema-item" data-fade>
-      <p class="problema-item-title">El coaching genérico no funciona.</p>
-      <p class="problema-item-body">Habla de objetivos sin modificar los patrones que los bloquean.</p>
-    </div>
-    <div class="problema-item" data-fade>
-      <p class="problema-item-title">NODO trabaja sobre conducta observable.</p>
-      <p class="problema-item-body">Lo que haces, cuándo lo haces y qué lo activa o interrumpe.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section proceso" id="proceso">
-  <p class="eyebrow proceso-eyebrow" data-fade>[ El proceso ]</p>
-  <div class="proceso-list">
-    <div class="proceso-step" data-fade>
-      <span class="step-ghost" aria-hidden="true">01</span>
-      <div class="step-left"><span class="step-index">01</span><h3 class="step-title">Diagnóstico</h3></div>
-      <div class="step-right"><p class="step-body">Llamada de 45 minutos. Se analiza el objetivo, los patrones actuales y los puntos de fricción. Sin diagnóstico no hay intervención.</p></div>
-    </div>
-    <div class="proceso-step" data-fade>
-      <span class="step-ghost" aria-hidden="true">02</span>
-      <div class="step-left"><span class="step-index">02</span><h3 class="step-title">Diseño</h3></div>
-      <div class="step-right"><p class="step-body">Se construye el sistema conductual personalizado. Rutinas, estímulos, consecuencias y métricas adaptadas al perfil real.</p></div>
-    </div>
-    <div class="proceso-step" data-fade>
-      <span class="step-ghost" aria-hidden="true">03</span>
-      <div class="step-left"><span class="step-index">03</span><h3 class="step-title">Intervención</h3></div>
-      <div class="step-right"><p class="step-body">Seguimiento activo 60 días. Corrección en tiempo real. El sistema se ajusta según conducta real, no intención declarada.</p></div>
-    </div>
-    <div class="proceso-step" data-fade>
-      <span class="step-ghost" aria-hidden="true">04</span>
-      <div class="step-left"><span class="step-index">04</span><h3 class="step-title">Consolidación</h3></div>
-      <div class="step-right"><p class="step-body">El patrón queda instalado y funciona de forma autónoma. Sin dependencia.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section planes" id="planes">
-  <p class="eyebrow planes-eyebrow" data-fade>[ Planes de intervención ]</p>
-  <div class="planes-grid">
-    <div class="plan" data-fade>
-      <p class="plan-badge">Plan A — Máxima intensidad</p>
-      <h3 class="plan-name">A</h3>
-      <p class="plan-price">1.197 € / mes</p>
-      <ul class="plan-features">
-        <li>Seguimiento 5 días/semana por Telegram</li>
-        <li>2 llamadas semanales por Zoom</li>
-        <li>Intervención de máxima intensidad</li>
-        <li>Prioridad absoluta de respuesta</li>
-      </ul>
-      <a href="https://tally.so" class="arrow-link arrow-link--white" target="_blank" rel="noopener">Solicitar plaza →</a>
-    </div>
-    <div class="plan" data-fade>
-      <p class="plan-badge">Plan B</p>
-      <h3 class="plan-name">B</h3>
-      <p class="plan-price">797 € / mes</p>
-      <ul class="plan-features">
-        <li>Seguimiento 3 días/semana por Telegram</li>
-        <li>1 llamada semanal por Zoom</li>
-        <li>Corrección y ajuste en tiempo real</li>
-        <li>Revisión de métricas semanales</li>
-      </ul>
-      <a href="https://tally.so" class="arrow-link arrow-link--white" target="_blank" rel="noopener">Solicitar plaza →</a>
-    </div>
-    <div class="plan" data-fade>
-      <p class="plan-badge">Plan C — Acceso</p>
-      <h3 class="plan-name">C</h3>
-      <p class="plan-price">497 € / mes</p>
-      <ul class="plan-features">
-        <li>Seguimiento 2 días/semana por Telegram</li>
-        <li>Sistema conductual personalizado</li>
-        <li>Corrección continua</li>
-        <li>Sin llamadas</li>
-      </ul>
-      <a href="https://tally.so" class="arrow-link arrow-link--white" target="_blank" rel="noopener">Solicitar plaza →</a>
-    </div>
-  </div>
-</section>
-
-<section class="cta-section" id="contacto">
-  <h2 class="cta-headline" data-fade>La intención<br>no es<br>conducta.</h2>
-  <div class="cta-conditions" data-fade>
-    <p class="cta-condition">Tienes un objetivo concreto y medible</p>
-    <p class="cta-condition">Estás dispuesto a seguir las pautas aunque no te apetezca</p>
-    <p class="cta-condition">No buscas motivación — buscas un sistema</p>
-    <p class="cta-condition">Puedes invertir al menos 497 € / mes durante 60 días</p>
-  </div>
-  <div class="cta-btn" data-fade>
-    <a href="https://tally.so" class="arrow-link arrow-link--white" target="_blank" rel="noopener">Solicitar diagnóstico gratuito →</a>
-  </div>
-</section>
-
-<footer>
-  <a href="#" class="logo-text logo-text--white" aria-label="NODO">NODO</a>
-  <div class="footer-info">
-    <a href="https://instagram.com/nodo.system" target="_blank" rel="noopener">@nodo.system</a>
-    <a href="mailto:nodo.conductual@gmail.com">nodo.conductual@gmail.com</a>
-  </div>
-</footer>
-
-<script>
-  document.querySelectorAll('.hero [data-fade]').forEach(el => {
-    const delay = (Number(el.dataset.delay) || 0) * 140 + 100;
-    setTimeout(() => el.classList.add('visible'), delay);
-  });
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('visible');
-      io.unobserve(entry.target);
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
-  document.querySelectorAll('[data-fade]:not(.hero [data-fade])').forEach(el => io.observe(el));
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
